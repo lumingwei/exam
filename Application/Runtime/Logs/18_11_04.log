@@ -1,0 +1,32 @@
+[ 2018-11-04T17:52:22+08:00 ] 127.0.0.1 /
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.001152s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001941s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.002853s ]
+INFO: [ app_end ] --END-- [ RunTime:0.002928s ]
+
+[ 2018-11-04T17:52:32+08:00 ] 127.0.0.1 /
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.001185s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001938s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.004600s ]
+INFO: [ app_end ] --END-- [ RunTime:0.004734s ]
+
+[ 2018-11-04T18:44:05+08:00 ] 127.0.0.1 /
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.003830s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.006230s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.005134s ]
+INFO: [ app_end ] --END-- [ RunTime:0.005306s ]
+
+[ 2018-11-04T18:46:23+08:00 ] 127.0.0.1 /
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.002612s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.004242s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.004319s ]
+INFO: [ app_end ] --END-- [ RunTime:0.004443s ]
+
