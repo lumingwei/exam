@@ -11,9 +11,9 @@
    <br/> 
    <foreach name="questions_list" item="question">
             <if condition="$question.has_done eq 1"> 
-            <button class="btn btn_submit mr10 " style="background-color: #FF00FF" type="button"><a href="{:U('Index/exam')}?question_num={$question.key}">{$question.key}</a></button>
+            <button class="btn btn_submit mr10 " style="background-color: #FF00FF" type="button"><a href="{:U('Index/exam')}&question_num={$question.key}">{$question.key}</a></button>
             <else/>
-            <button class="btn btn_submit mr10 " style="background-color: #FFFFE0" type="button"><a href="{:U('Index/exam')}?question_num={$question.key}">{$question.key}</a></button>            
+            <button class="btn btn_submit mr10 " style="background-color: #FFFFE0" type="button"><a href="{:U('Index/exam')}&question_num={$question.key}">{$question.key}</a></button>            
             </if>    
    </foreach>
    <input type="hidden" value="{$question_info.question_id}" id="question_id">
@@ -31,12 +31,12 @@
     <div class="child" style="margin-top: 20%;margin-bottom:40%;">
         <div class="btn_wrap_pd" style="float: right;">
             <if condition="$is_first neq 1"> 
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$previous_question_num}',1)">上一题</a></button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}&question_num={$previous_question_num}',1)">上一题</a></button>
             </if>
             <if condition="$is_last neq 1"> 
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$next_question_num}',1)">下一题</button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}&question_num={$next_question_num}',1)">下一题</button>
             </if>              
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$over_question_num}',2)">交卷</button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}&question_num={$over_question_num}',2)">交卷</button>
         </div>
 
     </div>
