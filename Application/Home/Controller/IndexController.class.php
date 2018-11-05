@@ -27,7 +27,7 @@ class IndexController extends Controller {
             }
             if(ACTION_NAME == 'exam'){
                 if(isset($_SESSION['user']['has_do_suject']) && $_SESSION['user']['has_do_suject'] == $this->subject_id){
-                     $this->error("您已经交卷！",'index/index');
+                     $this->error("您已经交卷！",U('index/index'));
                 }
             }            
         }
@@ -118,7 +118,7 @@ class IndexController extends Controller {
             //print_r($M()->getlastsql());exit;  
             if($res){
               $_SESSION['user']['has_do_suject'] =   $this->subject_id;
-              $this->success('交卷成功!',"index/index");
+              $this->success('交卷成功!',U('index/index'));
               exit;                
             } else{
               $this->error("交卷失敗，請重新提交");
