@@ -17,7 +17,7 @@
             </if>    
    </foreach>
    <input type="hidden" value="{$question_info.question_id}" id="question_id">
-    <br/>  <br/> {$question_info.question_id}
+    <br/>  <br/>
    題目描述: {$question_info.desc}
  <br/> 
    <foreach name="option" item="option">
@@ -31,31 +31,50 @@
     <div class="child" style="margin-top: 20%;margin-bottom:40%;">
         <div class="btn_wrap_pd" style="float: right;">
             <if condition="$is_first neq 1"> 
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$previous_question_num}')">上一题</a></button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$previous_question_num}',1)">上一题</a></button>
             </if>
             <if condition="$is_last neq 1"> 
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$next_question_num}')">下一题</button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$next_question_num}',1)">下一题</button>
             </if>              
-            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$over_question_num}')">交卷</button>
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$over_question_num}',2)">交卷</button>
         </div>
 
     </div>
 </div>
 </body>
 <script>
-function jump(url){
+function jump(url,type){
+    var type     = type;
     var tmp      = $("input[name='option_id']:checked").val();
     var option   = tmp?tmp:0;   
     var question_id = $("#question_id").val();
     var host = location.protocol+'//'+location.host;
     var jump_url = host+url;
     var save_url = "{:U('Index/save_answer')}";
+    var before_finish_url = "{:U('Index/before_finish')}";
     $.getJSON(save_url,{"question_id":question_id,'option_id':option},
         function(data){
             if(data.code==0){
-                window.location.href=jump_url;
+                if(type == 2){
+                    $.getJSON(before_finish_url,{},
+                        function(data){
+                            if(data.code==0){
+                              window.location.href=jump_url;
+                            }else if(data.code == 1){
+                                if(confirm(data.msg)){
+                                      window.location.href=jump_url;
+                                  }
+                            }else{
+                                   alert('系統繁忙，再來一次');
+                                   location.reload();
+                            }
+                        });
+                }else{
+                      window.location.href=jump_url;
+                }
             }else{
-                alert('系統繁忙，再來一次')
+                alert('系統繁忙，再來一次');
+                location.reload();
             }
         });
 }
