@@ -3,139 +3,214 @@
 namespace Home\Controller;
 use Think\Controller;
 class IndexController extends Controller {
+    //登陆界面
     public function index(){
-        set_time_limit(0);
-    	//获取价格 
-    	//https://c0.3.cn/stock?skuId=7765111&cat=670,671,672&venderId=1000000157&area=1_72_2799_0&buyNum=1&choseSuitSkuIds=&extraParam={%22originid%22:%221%22}&ch=1&fqsp=0&pduid=1080223807&pdpin=&callback=jQuery1369985
-    	$skuids = $this->getSkuIds();
-        if(!empty($skuids)){
-        	foreach($skuids as $sku){
-        		$list[] = [
-        			'id'=>$sku,
-        			'price'=>$this->getPrice($sku),
-        			'title'=>$this->getTitle($sku)
-        		];
-    
-        	}
+        // $this->produce_paper();
+         $this->assign("action", U('Index/login'));
+         $subjects = M('subject')->select();
+         $this->assign('subjects',$subjects);
+         $this->display();
+    }
+
+    //后面可以改为支持批量用户生成
+    private function produce_paper($uid = 1, $subject_id = 1){
+             $subject_id = 1;
+             $qlist = M('Question')->where(['subject_id'=>$subject_id])->select();
+             $optionlist = M('QuestionOption')->where(['subject_id'=>$subject_id])->select();
+             if(!empty($optionlist)){
+               foreach ($optionlist as $k => $v) {
+                 $qolist[$v['question_id']][] = $v;
+               }          
+             }
+             $sq_add  = [];
+             $sqo_add = [];
+             if(!empty($qlist)){
+                 shuffle($qlist);
+                 foreach ($qlist as $k => $v) {
+                     $sq_add[] = [
+                      'uid'=>$uid,
+                      'question_id'=>$v['id'],
+                      'subject_id' =>$v['subject_id'],
+                      'desc'=>$v['desc']
+                    ];
+                    if(!empty($qolist[$v['id']])){
+                        shuffle($qolist[$v['id']]); 
+                        foreach ($qolist[$v['id']] as $v) {
+                             $sqo_add[] = [
+                              'uid'=>$uid,
+                              'question_id'=>$v['question_id'],
+                              'subject_id' =>$v['subject_id'],
+                              'option_id'  =>$v['id'],
+                              'desc'=>$v['desc']
+                            ];                            
+                        }
+                    }
+                 }
+             }
+             if(!empty($sq_add)){
+                 M('StuQuestion')->addAll($sq_add);
+             }
+             if(!empty($sqo_add)){
+                  M('StuQuestionOption')->addAll($sqo_add);
+             }
+    }
+
+    public function exam(){
+        $question_num = I('question_num',1,'intval');
+        $answer       = I('answer',0,'intval');
+        $questions_list =  M('StuQuestion')->where(['subject_id'=>1,'uid'=>1])->select();
+        $total_num = !empty($questions_list) ? count($questions_list) : 0;
+        //交卷
+        if($question_num>$total_num){
+            //更新学生科目考试状态
+            echo '交卷成功!';
+            exit;
         }
- 
-                $file_name = '京东商品实时价格';
-                $xls_head = array(
-                    '京东skuid',
-                    'sku名称',
-                    '价格'
-                );
-                header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
-                header("Accept-Ranges: bytes");
-                header("Pragma: public");
-                header("Expires: 0");
-                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-                header("Content-Disposition: attachment; filename={$file_name}" . date('Y-m-d H:i:s',time()) . ".csv");
-                header("Content-Transfer-Encoding: binary");
-                echo mb_convert_encoding(implode(",", $xls_head) ."\r\n", 'GBK', 'UTF-8');
-                foreach ($list as $row)
-                {
-                    $item = array();
-                    $item[] = $row['id'].'`';
-                    $item[] = $row['title'];
-                    $item[] = $row['price'];
-                    echo mb_convert_encoding(implode(",", $item) ."\r\n", 'GBK', 'UTF-8');
+        foreach ($questions_list as $key => $value) {
+            if(!empty($value['answer'])){
+                $questions_list[$key]['has_done'] = 1;
+            }else{
+                $questions_list[$key]['has_done'] = 0;
+            }
+            $questions_list[$key]['key'] = $key+1;
+            if(!isset($question) && $key == $question_num-1){
+                $question = $value;
+            }
+        }
+        if(!empty($question)){
+            $pre = ['A','B','C','D'];
+            $option_list =  M('StuQuestionOption')->where(['question_id'=>$question['question_id'],'uid'=>1,'subject_id'=>1])->select();
+            if(!empty($option_list)){
+                foreach ($option_list as $key => $value) {
+                   $option_list[$key]['desc'] = $pre[$key].':'.$value['desc'];
                 }
+            }            
+        }
+        $is_first = $question_num == 1? 1: 0;
+        $is_last  = $question_num == $total_num? 1: 0;
+        $next_question_num = $question_num+1;
+        $previous_question_num = $question_num-1;
+        $this->assign('questions_list',$questions_list);     
+        $this->assign('question_info',$question);     
+        $this->assign('option',$option_list);     
+        $this->assign('previous_question_num',$previous_question_num);     
+        $this->assign('next_question_num',$next_question_num);     
+        $this->assign('over_question_num',++$total_num);     
+        $this->assign('is_first',$is_first);     
+        $this->assign('is_last',$is_last);     
+        $this->display();
     }
 
-    public function getPrice($sku_id){        		    	
-    	$price_url = "https://c0.3.cn/stock?skuId=".$sku_id."&cat=670,671,672&venderId=1000000157&area=1_72_2799_0&buyNum=1&choseSuitSkuIds=&extraParam={%22originid%22:%221%22}&ch=1&fqsp=0&pduid=1080223807&pdpin=&callback=jQuery1369985";
-    	    $price = 0;
-	    	$cont = file_get_contents($price_url);
-	    	if(!empty($cont)){
-	    		$tmp = explode('jQuery1369985(', $cont);
-	    		if(!empty($tmp[1])){
-	    			$tmp1 = rtrim($tmp[1],')');
-	    		}
-	    		
-	    		if(!empty($tmp1)){
-	    			$tmp1 = iconv("GBK","UTF-8",$tmp1);
-	    			$json = json_decode($tmp1);
-	    			$price = !empty($json->stock->jdPrice->p)?$json->stock->jdPrice->p:0;
-	    		}     		    		
-	    	}
-	    	return $price;
+    //异步
+    public function save_answer(){
+        $question_id = I('question_id',0,'intval');
+        $option_id = I('option_id',0,'intval');
+        if(!empty($option_id) && !empty($question_id)){
+         $res =  M('StuQuestion')->where(['question_id'=>$question_id,'uid'=>1,'subject_id'=>1])->save(['answer'=>$option_id]);
+        }
+        $result = ['data'=>[],'msg'=>'','code'=>0];
+        exit(json_encode($result));
     }
-        public function getTitle($sku_id){        		    	
-    	    $price_url = "https://item.jd.com/{$sku_id}.html";
-    	    $title = '';
-	    	$cont = file_get_contents($price_url);
-	    	if(!empty($cont)){
-	    		$regex4="/<div class=\"sku-name\".*?>.*?<\/div>/ism";  
-			if(preg_match_all($regex4, $cont, $matches)){  
-			   if(!empty($matches[0][0])){
-			   	    $tmp = explode('<div class="sku-name">', $matches[0][0]);
-			   	    $tmp1 = rtrim($tmp[1],'</div>');
-			   	    $title = iconv("GBK","UTF-8",$tmp1);
-                    $title = preg_replace("/<.*>/","",$title);
-			   	    $title = trim($title);
-			   }
-			}
-	    	return $title;
-           }
+
+    public function finish(){
+        echo '交卷成功';
+    }
+
+    //登录
+    public function login()
+    {
+        $unumber = I("post.unumber");
+        $pwd = I("post.pwd");
+
+        if(empty($unumber)){
+            $this->error("学号不能为空！");
+        }
+        if(strlen($unumber)!=12){
+            $this->error('请填写正确的学号！');
+        }
+        if (empty($pwd)) {
+            $this->error("密码不能为空！");
+        }
+        //验证密码
+        $user = $this->getUserInfo($unumber, $pwd);
+        $subject_id = (int)I('post.subject');
+        $subject_name = M('subject')->where(['id'=>$subject_id])->getField('subject_name');
+        if(!empty($user)){
+            $user['to_exam_subject'] = $subject_name;
+        }
+        $this->assign('user',$user);
+        $this->display('comfir_msg');
+        exit;
+        if (empty($user)) {
+            $this->error("密码错误！");
+        }else{
+            $subject_id = (int)I('post.subject');
+            $time = time();
+            $check_date = M('test_questions')->where("id=$subject_id AND $time<end_exam_date AND status!=2")->find();
+
+            if(empty($check_date)){
+                $this->error('现不是该科目的考试时间！');
+            }
+
+            if(strpos($user['exam_subject'],(string)$subject_id)===false){
+                $this->error('请正确选择需考试的科目!');
+            }
+            $check_subject = M('exam_status')->where("uid={$user['uid']} AND subject_id=$subject_id AND status!=2")->find();
+            if(empty($check_subject)){
+                $this->error('请选择尚未考试的科目！');
+            }
+
+            unset($user['pwd']);
+            $user['select_subject'] = $subject_id;
+            $_SESSION['user'] = $user;
+            $this->redirect('exam');
         }
 
-        public function getSkuIds(){
-            //达能
-            $sku[] = 831721;
-            $sku[] = 1216716;
-            $sku[] = 1171691;
-            $sku[] = 1216715;
-            $sku[] = 1014489;
-            $sku[] = 1217836;
-            $sku[] = 831713;
-            $sku[] = 1279473;
-            $sku[] = 3722856;
-            $sku[] = 873282;
-            $sku[] = 4264348;
-            $sku[] = 4264346;
-            $sku[] = 4264358;
-            $sku[] = 4264350;
+    }
 
-            //雀巢
-            $sku[] = 4396232;
-            $sku[] = 4396142;
-            $sku[] = 3849865;
-            $sku[] = 4209173;
-            $sku[] = 4713594;
-            $sku[] = 4008365;
-            $sku[] = 4713572;
-            $sku[] = 4712764;
-            $sku[] = 4712778;
-            $sku[] = 4007911;
-            $sku[] = 4712762;
-            $sku[] = 4712736;
-            $sku[] = 4007909;
-            $sku[] = 1080961;
-            $sku[] = 1080962;
-            $sku[] = 6493773;
-            $sku[] = 6493789;
-            $sku[] = 6493791;
-            $sku[] = 255780;
-            $sku[] = 255778;
-            $sku[] = 255751;
-            $sku[] = 1194389;
+     /**
+     * 获取用户信息
+     * @param type $identifier 用户名或者用户ID
+     * @return boolean|array
+     */
+    public function getUserInfo($unumber, $password = NULL) {
 
-            //雅培
-            $sku[] = 252591;
-            $sku[] = 2363423;
-            $sku[] = 2362923;
-            $sku[] = 1462651;
-            $sku[] = 813925;
-            $sku[] = 1000728;
-            $sku[] = 1568949;
-            $sku[] = 4847760;
-            $sku[] = 6089690;
-            $sku[] = 4262984;
-            $sku[] = 4550506;
-            $sku[] = 100000334678;
-            $sku[] = 100000539598;
-            return $sku;
+        $map = array();
+        $map['unumber'] = $unumber;
+
+        $userInfo = M('User')->where($map)->find();
+        if (empty($userInfo)) {
+            return false;
         }
+        //密码验证
+        if (!empty($password) && $this->hashPassword($password) != $userInfo['pwd']) {
+            return false;
+        }
+        return $userInfo;
+    }
+
+    /**
+     * 对明文密码，进行加密，返回加密后的密文密码
+     * @param string $password 明文密码
+     * @param string $verify 认证码
+     * @return string 密文密码
+     */
+    public function hashPassword($password, $verify = "") {
+        //return md5($password . md5($verify));
+        return md5($password);
+    }
+
+
+    //退出
+    public function logout()
+    {
+        unset($_SESSION['user']);
+        $this->redirect('index');
+    }
+
+
+
+
+
 
 }

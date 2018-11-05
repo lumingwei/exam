@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__CSS__/index.css" type="text/css">
+    <script src="__JS__/jquery.min.js"></script>
+</head>
+<body>
+   题目列表
+   <br/> 
+   <foreach name="questions_list" item="question">
+            <if condition="$question.has_done eq 1"> 
+            <button class="btn btn_submit mr10 " style="background-color: #FF00FF" type="button"><a href="{:U('Index/exam')}?question_num={$question.key}">{$question.key}</a></button>
+            <else/>
+            <button class="btn btn_submit mr10 " style="background-color: #FFFFE0" type="button"><a href="{:U('Index/exam')}?question_num={$question.key}">{$question.key}</a></button>            
+            </if>    
+   </foreach>
+   <input type="hidden" value="{$question_info.question_id}" id="question_id">
+    <br/>  <br/> {$question_info.question_id}
+   題目描述: {$question_info.desc}
+ <br/> 
+   <foreach name="option" item="option">
+            <if condition="$option.has_select eq 1"> 
+                <input type="radio" checked="checked" name="option_id" value="{$option.option_id}" />{$option.desc} <br/> 
+            <else/>
+                <input type="radio" name="option_id" value="{$option.option_id}" />{$option.desc}   <br/>        
+            </if>    
+   </foreach>
+<div style="width: 600px;height: 500px;">
+    <div class="child" style="margin-top: 20%;margin-bottom:40%;">
+        <div class="btn_wrap_pd" style="float: right;">
+            <if condition="$is_first neq 1"> 
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$previous_question_num}')">上一题</a></button>
+            </if>
+            <if condition="$is_last neq 1"> 
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$next_question_num}')">下一题</button>
+            </if>              
+            <button class="btn btn_success mr10 " type="button" onclick="jump('{:U(\'Index/exam\')}?question_num={$over_question_num}')">交卷</button>
+        </div>
+
+    </div>
+</div>
+</body>
+<script>
+function jump(url){
+    var tmp      = $("input[name='option_id']:checked").val();
+    var option   = tmp?tmp:0;   
+    var question_id = $("#question_id").val();
+    var host = location.protocol+'//'+location.host;
+    var jump_url = host+url;
+    var save_url = "{:U('Index/save_answer')}";
+    $.getJSON(save_url,{"question_id":question_id,'option_id':option},
+        function(data){
+            if(data.code==0){
+                window.location.href=jump_url;
+            }else{
+                alert('系統繁忙，再來一次')
+            }
+        });
+}
+</script>
+</html>

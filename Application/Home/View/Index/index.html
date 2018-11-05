@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__CSS__/index.css" type="text/css">
+    <script src="__JS__/jquery.min.js"></script>
+</head>
+<body>
+
+    <div class="content" >
+       <form  action="{:U('Index/login')}" method="post" id="myform">
+           <table width="110%" class="table_list contentWrap">
+               <tbody>
+               <tr>
+                   <th width="100">学号：</th>
+                   <td><input type="test" name="unumber" class="input" id="unumber">
+                       <span class="gray">请输入学号</span></td>
+               </tr>
+               <tr>
+                   <th>密码：</th>
+                   <td><input type="password" name="pwd" class="input" id="pwd" value="">
+                       <span class="gray">请输入密码</span></td>
+               </tr>
+               <tr>
+                   <th>科目：</td>
+                   <td><select name="subject">
+                           <option value=>--请选择</option>
+                           <foreach name="subjects" item="subject">
+                           <option value="{$subject.id}">{$subject.subject_name}</option>
+                           </foreach>
+                       </select></td>
+               </tr>
+               </tbody>
+           </table>
+
+           <div class="btn_wrap_pd" style="float: right;">
+               <button class="btn btn_submit mr10" type="submit">登录</button>
+           </div>
+
+       </form>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        $('.btn.btn_submit').click(function () {
+            var unumber = $('#unumber').val()?$('#unumber').val():'';
+            var pwd = $('#pwd').val()?$('#pwd').val():'';
+            var subject = $('select[name="subject"]').val()?$('select[name="subject"]').val():'';
+            if(unumber=='' || unumber.length != 12){
+                alert('请正确填写学号！');
+                return false;
+            }
+            if(pwd==''){
+                alert('请填写密码！');
+                return false;
+            }
+            if(subject==''){
+                alert('请选择要考试的枯科目!');
+                return false;
+            }
+
+           return true;
+        })
+    })
+</script>
+</html>
