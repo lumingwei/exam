@@ -51,7 +51,8 @@ class IndexController extends Controller {
              }           
         }else{
               $this->produce_paper($uid,$subject_id);
-        }       
+        } 
+        echo 'ok';      
     }
 
     //后面可以改为支持批量用户生成
@@ -60,9 +61,9 @@ class IndexController extends Controller {
                  return false;
              }
 
-             M('StuQuestion')->delete(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
-             M('StuQuestionOption')->delete(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
-             M('StuExamStatus')->delete(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
+             M('StuQuestion')->where(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
+             M('StuQuestionOption')->where(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
+             M('StuExamStatus')->where(['uid'=>$uid,'subject_id'=>$subject_id])->delete();
 
              $qlist = M('Question')->where(['subject_id'=>$subject_id])->select();
              $optionlist = M('QuestionOption')->where(['subject_id'=>$subject_id])->select();
