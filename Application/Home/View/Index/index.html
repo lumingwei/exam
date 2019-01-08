@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="__CSS__/index.css" type="text/css">
-    <script src="__JS__/jquery.min.js"></script>
 </head>
 <body>
 
     <div class="content" >
        <form  action="{:U('Index/login')}" method="post" id="myform">
-           <table width="110%" class="table_list contentWrap">
+           <table class="table_list contentWrap">
                <tbody>
                <tr>
-                   <th width="100">学号：</th>
+                   <th width="80">学号：</th>
                    <td><input type="test" name="unumber" class="input" id="unumber">
                        <span class="gray">请输入学号</span></td>
                </tr>
@@ -42,6 +41,7 @@
         </div>
     </div>
 </body>
+<script src="__JS__/jquery.min.js"></script>
 <script>
     $(function () {
         $('.btn.btn_submit').click(function () {

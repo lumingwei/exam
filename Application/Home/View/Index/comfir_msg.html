@@ -8,37 +8,36 @@
 </head>
 <body>
 
-<div class="content" id="alert" style="width: 600px;height: 500px;">
-    <div class="child" style="margin-top: 20%;margin-bottom:40%;">
-            <table width="100%" class="table_list contentWrap">
+<div class="content" id="alert" style="width: 500px;height: 420px;">
+    <div>
+            <table width="100%" class="table_list contentWrap" style="margin:0">
                 <tbody>
                 <tr>
                     <th width="100">姓名：</th>
-                    <td><input type="text" name="name" class="input" disabled id="name" value="{$user.name}"></td>
-                    <td rowspan="5"><span style="color:#008800;display: block;padding: 30px;">确认个人信息无误，点击进入考试！</span></td>
+                    <td><input type="text" name="name" class="input comfirInput" disabled id="name" value="{$user.name}"></td>
                 </tr>
                 <tr>
                     <th width="100">学号：</th>
-                    <td><input type="text" name="unumber" class="input" disabled id="unumber" value="{$user.unumber}">
+                    <td><input type="text" name="unumber" class="input comfirInput" disabled id="unumber" value="{$user.unumber}">
                 </tr>
                 <tr>
                     <th width="100">班级：</th>
-                    <td><input type="text" name="class" class="input" disabled id="class" value="{$user.class}">
+                    <td><input type="text" name="class" class="input comfirInput" disabled id="class" value="{$user.class}">
                 </tr>
                 <tr>
                     <th width="100">性别：</th>
-                    <td><input type="text" name="sex" class="input" disabled id="sex" value="{$user.sex}">
+                    <td><input type="text" name="sex" class="input comfirInput" disabled id="sex" value="{$user.sex}">
                 </tr>
                 <tr>
                     <th>考试科目：</th>
-                    <td><input type="text" name="subject" class="input" disabled id="subject" value="{$user.to_exam_subject}">
+                    <td><input type="text" name="subject" class="input comfirInput" disabled id="subject" value="{$user.to_exam_subject}">
                 </tr>
                 </tbody>
             </table>
-
-        <div class="btn_wrap_pd" style="float: right;">
-            <button class="btn btn_success mr10 " type="button" id="logout"><a href="{:U('Index/logout')}">返回</a></button>
-            <button class="btn btn_success mr10 " type="button" id="start_exam"><a href="{:U('Index/exam')}">进入</a></button>
+        <p style="text-align:center;color:#008800;">确认个人信息无误，点击进入考试！</p>
+        <div class="btn_wrap_pd" style="text-align:center;">
+            <button class="btn btn_return" type="button" id="logout"><a href="{:U('Index/logout')}">返回</a></button>
+            <button class="btn btn_submit" type="button" id="start_exam"><a href="{:U('Index/exam')}">进入</a></button>
         </div>
 
     </div>
