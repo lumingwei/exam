@@ -11,7 +11,7 @@
         <p style="margin-bottom:10px;">题目列表</p>
         <foreach name="questions_list" item="question">
             <if condition="$question.has_done eq 1">
-                <button class="btn btn_ques mr10 " style="background-color: #ec020e;" type="button"><a href="{:U('Index/exam')}&question_num={$question.key}" style="color:#fff;">{$question.key}</a></button>
+                <button class="btn btn_ques mr10 " style="background-color: #0000FF;" type="button"><a href="{:U('Index/exam')}&question_num={$question.key}" style="color:#fff;">{$question.key}</a></button>
                 <else />
                 <button class="btn btn_ques mr10 " type="button"><a href="{:U('Index/exam')}&question_num={$question.key}">{$question.key}</a></button>
             </if>
