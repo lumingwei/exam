@@ -42,6 +42,7 @@ class IndexController extends Controller {
     }
 
     public function lmwlyt(){
+        set_time_limit(0);
         $subject_id = I('subject_id',1,'intval');       
         $uid        = I('uid',0,'intval');
         if(empty($uid)){
