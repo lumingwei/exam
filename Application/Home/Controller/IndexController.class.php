@@ -119,10 +119,10 @@ class IndexController extends Controller {
             //print_r($M()->getlastsql());exit;  
             if($res){
               $_SESSION['user']['has_do_suject'] =   $this->subject_id;
-              $this->success('交卷成功!',U('index/index'));
+              $this->success('交卷成功!',U('index/index'),10);
               exit;                
             } else{
-              $this->error("交卷失敗，請重新提交");
+              $this->error("交卷失敗，請重新提交",U('index/index'),10);
             }      
         }
         if(!empty($questions_list)){
@@ -156,7 +156,8 @@ class IndexController extends Controller {
         $is_last  = $question_num == $total_num? 1: 0;
         $next_question_num = $question_num+1;
         $previous_question_num = $question_num-1;
-        $this->assign('questions_list',$questions_list);     
+        $this->assign('questions_list',$questions_list);
+        $this->assign('question_num',$question_num);
         $this->assign('question_info',$question);     
         $this->assign('option',$option_list);     
         $this->assign('previous_question_num',$previous_question_num);     
@@ -216,17 +217,17 @@ class IndexController extends Controller {
             $user['to_exam_subject'] = $subject_name;
         }
         if (empty($user)) {
-            $this->error("密码错误！");
+            $this->error("密码错误！",U('index/index'),10);
         }else{
             $time = time();
             $check_date = M('exam')->where("subject_id=$subject_id AND $time>start_exam_date AND $time<end_exam_date")->find();
 
             if(empty($check_date)){
-                $this->error('现不是该科目的考试时间！');
+                $this->error('现不是该科目的考试时间！',U('index/index'),10);
             }
             $check_subject = M('stu_exam_status')->where("uid={$user['uid']} AND subject_id=$subject_id AND status!=2")->find();
             if(empty($check_subject)){
-                $this->error('请选择尚未考试的科目！');
+                $this->error('请选择尚未考试的科目！',U('index/index'),10);
             }
             unset($user['pwd']);
             $user['subject_id'] = $subject_id;

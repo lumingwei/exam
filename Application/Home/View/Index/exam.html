@@ -9,17 +9,29 @@
     <div class="timeDiv">剩余时间：<span class="time">0</span> s</div>
     <div>
         <p style="margin-bottom:10px;">题目列表</p>
-        <foreach name="questions_list" item="question">
+
+                        <volist name="questions_list" id="data" mod="10">
+                           <div style="display:inline-block;width: 100px">
+                               <eq name="data.has_done" value="1">
+                <button class="btn btn_ques mr10 " style="background-color: #0000FF;" type="button"><a href="{:U('Index/exam')}&question_num={$data.key}" style="color:#fff;">{$data.key}</a></button>
+                                   <else />
+                   <button class="btn btn_ques mr10 " type="button"><a href="{:U('Index/exam')}&question_num={$data.key}">{$data.key}</a></button>
+                               </eq>
+                           </div>
+                            <eq name="mod" value="9"><br/><br/></eq>
+                        </volist>
+<!--         <foreach name="questions_list" item="question">
             <if condition="$question.has_done eq 1">
                 <button class="btn btn_ques mr10 " style="background-color: #0000FF;" type="button"><a href="{:U('Index/exam')}&question_num={$question.key}" style="color:#fff;">{$question.key}</a></button>
                 <else />
                 <button class="btn btn_ques mr10 " type="button"><a href="{:U('Index/exam')}&question_num={$question.key}">{$question.key}</a></button>
             </if>
-        </foreach>
+        </foreach> 
+ <br/><br />
+    -->
         <input type="hidden" value="{$question_info.question_id}" id="question_id">
-        <br/><br />
         <div class="question">
-            題目描述: {$question_info.desc}
+            {$question_num}、題目描述: {$question_info.desc}
             <br/>
             <foreach name="option" item="option">
                 <if condition="$option.has_select eq 1">
