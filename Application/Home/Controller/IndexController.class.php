@@ -34,7 +34,7 @@ class IndexController extends Controller {
     }
 
     //抽奖
-     public function getReward(){
+     public function getreward(){
           $cookieName = 'YZYC_Prize_1';
           if(isset($_COOKIE['YZYC_Prize_1'])){
              $prize = '今天已经抽奖'." <br/> (".$_COOKIE['YZYC_Prize_1'].")";
