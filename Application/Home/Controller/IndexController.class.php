@@ -60,7 +60,7 @@ class IndexController extends Controller {
          setCookie($cookieName,$prize,time()+12*3600);
          }
          $this->assign('prize',$prize);   
-         $this->display();
+         $this->display('reward');
     }   
     
     //登陆界面
