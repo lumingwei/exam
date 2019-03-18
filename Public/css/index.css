@@ -3225,10 +3225,10 @@ input[type=radio]{
     cursor: pointer;
     vertical-align: bottom;
     background: #fff;
-    border: 1px solid #B9BBBE;
-    -webkit-border-radius: 1px;
-    -moz-border-radius: 1px;
-    border-radius: 1px;
+		border: 1px solid #B9BBBE;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -3381,4 +3381,26 @@ input[name='option_id']{
 }
 .question{
 	font-size:18px;
+}
+.loginPage{
+	background:url('../images/bg-1.jpg') no-repeat;
+	background-size:cover;
+}
+.confirmPage{
+	background:url('../images/bg-2.png') no-repeat;
+	background-size:cover;
+}
+.examPage{
+	background:url('../images/bg-3.jpg') no-repeat;
+	background-size:cover;
+}
+.xiaohuiIcon{
+	display:block;
+	width:267px;
+	height:60px;
+	background:url('../images/xiaohuiIcon-2.png') no-repeat;
+	background-size:100% 100%;
+	position:absolute;
+	top:50px;
+	right:50px;
 }
